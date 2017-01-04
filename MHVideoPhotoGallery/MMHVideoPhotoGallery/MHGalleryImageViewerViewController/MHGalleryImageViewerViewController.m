@@ -79,6 +79,7 @@
     if (self.navigationController.delegate == self) {
         self.navigationController.delegate = nil;
     }
+    MHStatusBar().alpha = 1;
 }
 
 -(void)donePressed{
