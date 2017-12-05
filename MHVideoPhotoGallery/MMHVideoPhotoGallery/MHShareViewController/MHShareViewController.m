@@ -17,6 +17,7 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "MHGallery.h"
 #import "Masonry.h"
+#import <Photos/Photos.h>
 
 @implementation MHImageURL
 
@@ -960,30 +961,45 @@
     }];
     
 }
+
 -(void)saveImages:(NSArray*)object{
-    [self getAllImagesForSelectedRows:^(NSArray *images) {
-        for (MHImageURL *dataURL in images) {
-            
-            if ([dataURL.image isKindOfClass:[UIImage class]]) {
-                
-                UIImage *imageToStore = dataURL.image;
-                
-                ALAssetsLibrary* library = ALAssetsLibrary.new;
-                NSData *data;
-                
-                if (imageToStore.images) {
-                    data = [NSData dataWithContentsOfFile:[[SDImageCache sharedImageCache] defaultCachePathForKey:dataURL.URL]];
-                }else{
-                    data = UIImageJPEGRepresentation(imageToStore, 1.0);
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        if( status == PHAuthorizationStatusAuthorized ) {
+            [self getAllImagesForSelectedRows:^(NSArray *images) {
+                for (MHImageURL *dataURL in images) {
+                    
+                    if ([dataURL.image isKindOfClass:[UIImage class]]) {
+                        
+                        UIImage *imageToStore = dataURL.image;
+                        
+                        ALAssetsLibrary* library = ALAssetsLibrary.new;
+                        NSData *data;
+                        
+                        if (imageToStore.images) {
+                            data = [NSData dataWithContentsOfFile:[[SDImageCache sharedImageCache] defaultCachePathForKey:dataURL.URL]];
+                        }else{
+                            data = UIImageJPEGRepresentation(imageToStore, 1.0);
+                        }
+                        
+                        [library writeImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+                            NSLog(@"%@",error);
+                        }];
+                    }
                 }
-                
-                [library writeImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
-                    NSLog(@"%@",error);
-                }];
-            }
+                [self cancelPressed];
+            } saveDataToCameraRoll:YES];
+        }else {
+            //NSString *message = MHGalleryLocalizedString(@"permission_album_alert_title");
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"앨범 접근 권한이 필요합니다." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *moveSetting = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            }];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+            [alertController addAction:moveSetting];
+            [alertController addAction:cancel];
+            [self presentViewController:alertController animated:true completion:nil];
         }
-        [self cancelPressed];
-    } saveDataToCameraRoll:YES];
+    }];
 }
 
 

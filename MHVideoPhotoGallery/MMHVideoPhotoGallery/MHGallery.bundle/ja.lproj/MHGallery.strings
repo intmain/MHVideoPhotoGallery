@@ -18,4 +18,5 @@
 "shareview.download"              = "download data\n";
 "shareview.download.cancel"       = "Cancel";
 "truncate.more"                   = "more";
-"permission_album_alert_title" = "You need to grant access to your camera in the Agit app to enable this feature.";
+"permission_album_alert_title"    = "この機能を使用するためには、アジトアプリのカメラのアクセス権限を許可してください。";
+
