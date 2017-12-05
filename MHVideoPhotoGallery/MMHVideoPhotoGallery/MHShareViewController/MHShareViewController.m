@@ -989,8 +989,8 @@
                 [self cancelPressed];
             } saveDataToCameraRoll:YES];
         }else {
-            //NSString *message = MHGalleryLocalizedString(@"permission_album_alert_title");
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"앨범 접근 권한이 필요합니다." preferredStyle:UIAlertControllerStyleAlert];
+            NSString *message = MHGalleryLocalizedString(@"permission_album_alert_title");
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *moveSetting = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
             }];
