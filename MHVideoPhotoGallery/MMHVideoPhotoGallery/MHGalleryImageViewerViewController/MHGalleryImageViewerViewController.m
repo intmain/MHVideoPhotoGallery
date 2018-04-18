@@ -284,7 +284,7 @@
         [self.toolbar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view.mas_left);
             make.right.mas_equalTo(self.view.mas_right);
-            make.bottom.mas_equalTo(self.view.mas_bottom);
+            make.bottom.mas_equalTo(-self.view.safeAreaInsets.bottom);
         }];
     }else {
         [self.toolbar mas_updateConstraints:^(MASConstraintMaker *make) {
