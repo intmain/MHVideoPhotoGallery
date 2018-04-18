@@ -338,12 +338,12 @@
         self.collectionView.decelerationRate = UIScrollViewDecelerationRateNormal;
         [self.view addSubview:self.collectionView];
         
-        
+        CGFloat height = self.presentingViewController.view.frame.size.height - topSafeInset - 44 - _bottomSafeInset - 240;
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view.mas_left);
             make.top.mas_equalTo(self.view.mas_top).with.offset(topSafeInset+44);
             make.right.mas_equalTo(self.view.mas_right);
-            make.bottom.mas_equalTo(self.view.mas_bottom).with.offset(-_bottomSafeInset-240);
+            make.height.mas_equalTo(height);
         }];
         
         [self.selectedRows addObject:[NSIndexPath indexPathForRow:self.pageIndex inSection:0]];

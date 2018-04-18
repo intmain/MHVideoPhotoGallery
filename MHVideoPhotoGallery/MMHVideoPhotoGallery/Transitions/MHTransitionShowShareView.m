@@ -24,8 +24,10 @@
         
         MHImageViewController *imageViewController = [[fromViewController.pageViewController viewControllers]firstObject];
         CGFloat bottomSafeInset = 0;
+        CGFloat topSafeInset = 0;
         if( @available(iOS 11, *)) {
             bottomSafeInset = imageViewController.view.safeAreaInsets.bottom;
+            topSafeInset = imageViewController.view.safeAreaInsets.top;
         }
         MHUIImageViewContentViewAnimation *cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:[containerView convertRect:imageViewController.imageView.frame fromView:imageViewController.imageView.superview]];
         cellImageSnapshot.image = imageViewController.imageView.image;
@@ -37,17 +39,17 @@
             cellImageSnapshot.image =  MHImageFromView(view);
         }
         [cellImageSnapshot setFrame:AVMakeRectWithAspectRatioInsideRect(cellImageSnapshot.imageMH.size, cellImageSnapshot.frame)];
-        
+        CGFloat height = toViewController.view.frame.size.height-240-bottomSafeInset-topSafeInset;
         toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
         toViewController.tableViewShare.frame = CGRectMake(0, fromViewController.view.frame.size.height-bottomSafeInset, fromViewController.view.frame.size.width, 240);
         toViewController.gradientView.frame = CGRectMake(0, fromViewController.view.frame.size.height-bottomSafeInset, fromViewController.view.frame.size.width,240);
         toViewController.collectionView.alpha =0;
-        toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height-240);
-        
+        toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, height);
+
         if([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait){
-            toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height-240);
+            toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, height);
         }else{
-            toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height);
+            toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, height);
         }
         
         MHGalleryController *galleryController = (MHGalleryController*)fromViewController.navigationController;
