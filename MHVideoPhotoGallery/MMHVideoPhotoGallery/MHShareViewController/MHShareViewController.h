@@ -72,6 +72,7 @@ _Pragma("clang diagnostic pop") \
 @property(nonatomic,strong) UIToolbar *toolbar;
 @property(nonatomic)        NSInteger pageIndex;
 @property(nonatomic,strong) NSArray *galleryItems;
+@property(nonatomic,assign) CGFloat bottomSafeInset;
 
 @property (nonatomic, copy) void (^finishedCallbackDownloadData)(NSArray *images);
 
