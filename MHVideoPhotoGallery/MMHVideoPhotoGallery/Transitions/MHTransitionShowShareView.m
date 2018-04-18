@@ -10,7 +10,7 @@
 #import "MHGallerySharedManagerPrivate.h"
 
 @implementation MHTransitionShowShareView
-
+    
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     
     self.context = transitionContext;
@@ -23,7 +23,10 @@
         NSTimeInterval duration = [self transitionDuration:transitionContext];
         
         MHImageViewController *imageViewController = [[fromViewController.pageViewController viewControllers]firstObject];
-        
+        CGFloat bottomSafeInset = 0;
+        if( @available(iOS 11, *)) {
+            bottomSafeInset = imageViewController.view.safeAreaInsets.bottom;
+        }
         MHUIImageViewContentViewAnimation *cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:[containerView convertRect:imageViewController.imageView.frame fromView:imageViewController.imageView.superview]];
         cellImageSnapshot.image = imageViewController.imageView.image;
         
@@ -36,8 +39,8 @@
         [cellImageSnapshot setFrame:AVMakeRectWithAspectRatioInsideRect(cellImageSnapshot.imageMH.size, cellImageSnapshot.frame)];
         
         toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
-        toViewController.tableViewShare.frame = CGRectMake(0, fromViewController.view.frame.size.height, fromViewController.view.frame.size.width, 240);
-        toViewController.gradientView.frame = CGRectMake(0, fromViewController.view.frame.size.height, fromViewController.view.frame.size.width,240);
+        toViewController.tableViewShare.frame = CGRectMake(0, fromViewController.view.frame.size.height-bottomSafeInset, fromViewController.view.frame.size.width, 240);
+        toViewController.gradientView.frame = CGRectMake(0, fromViewController.view.frame.size.height-bottomSafeInset, fromViewController.view.frame.size.width,240);
         toViewController.collectionView.alpha =0;
         toViewController.collectionView.frame =  CGRectMake(0, 0, fromViewController.view.frame.size.width, fromViewController.view.frame.size.height-240);
         
@@ -55,17 +58,17 @@
         
         [containerView addSubview:toViewController.view];
         [containerView addSubview:whiteView];
-
+        
         [containerView addSubview:cellImageSnapshot];
         
         UIView *snapShot = [imageViewController.view snapshotViewAfterScreenUpdates:NO];
         [containerView addSubview:snapShot];
         
         
-
+        
         [toViewController.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:toViewController.pageIndex inSection:0]
-                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                            animated:NO];
+                                                atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
+                                                        animated:NO];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -76,13 +79,13 @@
             [UIView animateWithDuration:duration animations:^{
                 
                 toViewController.collectionView.alpha =1;
-               
+                
                 if([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait){
-                    toViewController.gradientView.frame = CGRectMake(0, toViewController.view.frame.size.height-240, toViewController.view.frame.size.width,240);
-                    toViewController.tableViewShare.frame = CGRectMake(0, toViewController.view.frame.size.height-230, toViewController.view.frame.size.width, 240);
+                    toViewController.gradientView.frame = CGRectMake(0, toViewController.view.frame.size.height-240-bottomSafeInset, toViewController.view.frame.size.width,240);
+                    toViewController.tableViewShare.frame = CGRectMake(0, toViewController.view.frame.size.height-230-bottomSafeInset, toViewController.view.frame.size.width, 240);
                 }else{
-                    toViewController.gradientView.frame = CGRectMake(0, toViewController.view.frame.size.height, toViewController.view.frame.size.width,240);
-                    toViewController.tableViewShare.frame = CGRectMake(0, toViewController.view.frame.size.height, toViewController.view.frame.size.width, 240);
+                    toViewController.gradientView.frame = CGRectMake(0, toViewController.view.frame.size.height+bottomSafeInset, toViewController.view.frame.size.width,240);
+                    toViewController.tableViewShare.frame = CGRectMake(0, toViewController.view.frame.size.height+bottomSafeInset, toViewController.view.frame.size.width, 240);
                 }
                 fromViewController.view.alpha =0;
                 cellImageSnapshot.frame = [containerView convertRect:cell.thumbnail.frame fromView:cell.thumbnail.superview];
@@ -103,12 +106,15 @@
         MHGalleryImageViewerViewController *toViewController = (MHGalleryImageViewerViewController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
         UIView *containerView = [transitionContext containerView];
         NSTimeInterval duration = [self transitionDuration:transitionContext];
-        
+        CGFloat bottomSafeInset = 0;
+        if( @available(iOS 11, *)) {
+            bottomSafeInset = toViewController.view.safeAreaInsets.bottom;
+        }
         MHMediaPreviewCollectionViewCell *cell;
         NSArray *visible = fromViewController.collectionView.visibleCells;
-
+        
         NSArray *cellsSorted =[self sortObjectsWithFrame:visible];
-
+        
         if (fromViewController.collectionView.visibleCells.count ==3) {
             cell = cellsSorted[1];
         }else{
@@ -124,24 +130,24 @@
         }
         
         toViewController.pageIndex = cell.tag;
-
+        
         [containerView addSubview:toViewController.view];
         
         
         
         
-        toViewController.toolbar.frame = CGRectMake(0, fromViewController.view.frame.size.height-44, fromViewController.view.frame.size.width, 44);
+        toViewController.toolbar.frame = CGRectMake(0, fromViewController.view.frame.size.height-44-bottomSafeInset, fromViewController.view.frame.size.width, 44+bottomSafeInset);
         MHGalleryController *galleryController = (MHGalleryController*)fromViewController.navigationController;
         MHGalleryItem *item = [galleryController.dataSource itemForIndex:toViewController.pageIndex];
         [toViewController updateToolBarForItem:item];
-
+        
         MHImageViewController *ivC =[MHImageViewController imageViewControllerForMHMediaItem:item viewController:toViewController];
         ivC.pageIndex = toViewController.pageIndex;
         
         [toViewController.pageViewController setViewControllers:@[ivC]
-                           direction:UIPageViewControllerNavigationDirectionForward
-                            animated:NO
-                          completion:nil];        
+                                                      direction:UIPageViewControllerNavigationDirectionForward
+                                                       animated:NO
+                                                     completion:nil];
         cell.thumbnail.hidden = YES;
         
         MHUIImageViewContentViewAnimation *cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:[containerView convertRect:cell.thumbnail.frame fromView:cell.thumbnail.superview]];
@@ -164,13 +170,13 @@
                                 withDuration:duration
                                   afterDelay:0
                                     finished:^(BOOL finished) {
-                                    
-                                }];
+                                        
+                                    }];
         
         [UIView animateWithDuration:duration animations:^{
             backWhite.alpha =1;
-            fromViewController.gradientView.frame = CGRectMake(0, toViewController.view.frame.size.height, toViewController.view.frame.size.width,240);
-            fromViewController.tableViewShare.frame = CGRectMake(0, toViewController.view.frame.size.height, toViewController.view.frame.size.width, 240);
+            fromViewController.gradientView.frame = CGRectMake(0, toViewController.view.frame.size.height+bottomSafeInset, toViewController.view.frame.size.width,240);
+            fromViewController.tableViewShare.frame = CGRectMake(0, toViewController.view.frame.size.height+bottomSafeInset, toViewController.view.frame.size.width, 240);
         } completion:^(BOOL finished) {
             toViewController.view.alpha =1;
             [cellImageSnapshot removeFromSuperview];
@@ -182,7 +188,7 @@
         
     }
 }
-
+    
 -(NSArray*)sortObjectsWithFrame:(NSArray*)objects{
     NSComparator comparatorBlock = ^(id obj1, id obj2) {
         if ([obj1 frame].origin.x > [obj2 frame].origin.x) {
@@ -197,10 +203,10 @@
     [fieldsSort sortUsingComparator:comparatorBlock];
     return [NSArray arrayWithArray:fieldsSort];
 }
-
-
+    
+    
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
     return 0.3;
 }
-
-@end
+    
+    @end

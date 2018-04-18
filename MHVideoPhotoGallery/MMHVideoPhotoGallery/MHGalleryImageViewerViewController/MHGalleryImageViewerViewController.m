@@ -280,11 +280,19 @@
     [self.topSuperView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.mas_topLayoutGuideBottom);
     }];
-    [self.toolbar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view.mas_left);
-        make.right.mas_equalTo(self.view.mas_right);
-        make.bottom.mas_equalTo(self.view.mas_bottom);
-    }];
+    if( @available(iOS 11, *)) {
+        [self.toolbar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.view.mas_left);
+            make.right.mas_equalTo(self.view.mas_right);
+            make.bottom.mas_equalTo(self.view.mas_bottom);
+        }];
+    }else {
+        [self.toolbar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.view.mas_left);
+            make.right.mas_equalTo(self.view.mas_right);
+            make.bottom.mas_equalTo(self.view.mas_bottom);
+        }];
+    }
     [self.bottomSuperView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.toolbar.mas_top);
     }];
