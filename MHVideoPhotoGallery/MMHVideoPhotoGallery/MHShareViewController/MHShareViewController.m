@@ -31,7 +31,7 @@
     return self;
 }
     
-    @end
+@end
 
 @implementation MHDownloadView
     
@@ -110,7 +110,7 @@
 }
     
     
-    @end
+@end
 
 
 @implementation MHShareItem
@@ -167,11 +167,12 @@
     }
     return self;
 }
+
 -(void)prepareForReuse{
-    
+    [super prepareForReuse];
 }
-    
-    @end
+
+@end
 
 
 @implementation MHShareCell
@@ -193,7 +194,7 @@
     }
     return self;
 }
-    @end
+@end
 
 
 @interface MHShareViewController ()
@@ -212,7 +213,7 @@
     @property (nonatomic,strong) NSMutableArray *dataDownload;
     @property (nonatomic,strong) NSMutableArray *sessions;
     
-    @end
+@end
 
 @implementation MHShareViewController
     
@@ -301,8 +302,10 @@
 - (void)viewDidLoad
     {
         [super viewDidLoad];
+        CGFloat topSafeInset = 0;
         if( @available(iOS 11, *)) {
             self.bottomSafeInset = self.presentingViewController.view.safeAreaInsets.bottom;
+            topSafeInset = self.presentingViewController.view.safeAreaInsets.top;
         }else {
             self.bottomSafeInset = 0;
         }
@@ -338,16 +341,16 @@
         
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view.mas_left);
-            make.top.mas_equalTo(self.view.mas_top);
+            make.top.mas_equalTo(self.view.mas_top).with.offset(topSafeInset+44);
             make.right.mas_equalTo(self.view.mas_right);
+            make.bottom.mas_equalTo(self.view.mas_bottom).with.offset(-_bottomSafeInset-240);
         }];
         
         [self.selectedRows addObject:[NSIndexPath indexPathForRow:self.pageIndex inSection:0]];
         
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.pageIndex inSection:0]
                                     atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
-                                            animated:NO];
-        
+                                            animated:YES];
         self.gradientView= [UIView.alloc initWithFrame:CGRectMake(0, self.view.frame.size.height-240-_bottomSafeInset, self.view.frame.size.width,240+_bottomSafeInset)];
         
         self.toolbar = [UIToolbar.alloc initWithFrame:self.gradientView.frame];
@@ -377,7 +380,7 @@
         [self.tableViewShare addSubview:sep];
         
         [self.tableViewShare mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.collectionView.mas_bottom);
+            //make.top.mas_equalTo(self.collectionView.mas_bottom);
             make.left.mas_equalTo(self.view.mas_left);
             make.bottom.mas_equalTo(self.view.mas_bottom).with.offset(_bottomSafeInset);
             make.right.mas_equalTo(self.view.mas_right);
