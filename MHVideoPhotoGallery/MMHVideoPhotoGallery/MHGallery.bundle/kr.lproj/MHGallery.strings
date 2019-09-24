@@ -7,15 +7,15 @@
 */
 
 
-"imagedetail.title.current"       = "%@ of %@";
+"imagedetail.title.current"       = "%@ 중 %@";
 "overview.title.current"          = "Overview";
 "overview.menue.item.save"        = "Save";
 "shareview.message"               = "Message";
 "shareview.mail"                  = "Mail";
-"shareview.save.cameraRoll"       = "Save to \n Camera Roll";
-"shareview.title.select.plural"   = "%@ Photos Selected";
-"shareview.title.select.singular" = "%@ Photo Selected";
+"shareview.save.cameraRoll"       = "카메라롤에 저장";
+"shareview.title.select.plural"   = "%@ 사진 선택";
+"shareview.title.select.singular" = "%@ 사진 선택";
 "shareview.download"              = "download data\n";
-"shareview.download.cancel"       = "Cancel";
-"truncate.more"                   = "more";
+"shareview.download.cancel"       = "취소";
+"truncate.more"                   = "더보기";
 "permission_album_alert_title"    = "아지트 앱의 앨범 접근 권한을 허용해야 사용할 수 있는 기능입니다";

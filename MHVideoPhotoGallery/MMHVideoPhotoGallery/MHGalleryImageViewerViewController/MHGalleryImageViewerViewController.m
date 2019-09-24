@@ -79,7 +79,7 @@
     if (self.navigationController.delegate == self) {
         self.navigationController.delegate = nil;
     }
-    MHStatusBar().alpha = 1;
+    //MHStatusBar().alpha = 1;
 }
 
 -(void)donePressed{
@@ -883,7 +883,7 @@
                 }
                 
                 if (progressY > 0.35 || velocityY >700) {
-                    MHStatusBar().alpha = MHShouldShowStatusBar() ? 1 : 0;
+                    //MHStatusBar().alpha = MHShouldShowStatusBar() ? 1 : 0;
                     [self.interactiveTransition finishInteractiveTransition];
                 }else {
                     [self setNeedsStatusBarAppearanceUpdate];
@@ -1532,7 +1532,7 @@
     if (!MHShouldShowStatusBar()) {
         alpha = 0;
     }
-    MHStatusBar().alpha = alpha;
+    //MHStatusBar().alpha = alpha;
 }
 
 -(void)handelImageTap:(UIGestureRecognizer *)gestureRecognizer{
